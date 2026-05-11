@@ -16,11 +16,10 @@ def collector():
     if request.method == 'POST':
         user_text = request.form.get('message')
         if user_text:
-            # 2. Store the message in a Redis list called 'user_messages'
+            # CHANGED TO 'user_messages' to match your friend's App 2
             r.lpush('user_messages', user_text)
             status_message = "Message saved successfully!"
 
-    # Simple HTML Form for the user to type into
     return render_template_string('''
         <h1>DevOpsHub: Message Collector (App 1)</h1>
         <p>Type a message to send to the Dashboard.</p>
@@ -33,5 +32,5 @@ def collector():
         <a href="http://localhost:5001">Go to Dashboard (App 2)</a>
     ''', status=status_message)
 
-if name == "__main__":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
