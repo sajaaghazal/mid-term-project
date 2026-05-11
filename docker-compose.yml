@@ -12,15 +12,15 @@ services:
       - "5000:5000"
     depends_on:
       - redis
-      
-    app2:
-    [cite_start]build: ./app2              # Tells Docker to find your Dockerfile in the app2 folder [cite: 31]
-    container_name: dashboard  # Giving it a clear name like your partner did
-    ports:
-      - [cite_start]"5001:5001"            # Use 5001 so it doesn't clash with App 1 [cite: 33]
-    depends_on:
-      - redis                  # Dashboard won't start until Redis is ready
 
+    app2:
+    build: ./app2
+    container_name: dashboard
+    ports:
+      - "5001:5001"
+    depends_on:
+      - redis
+      
 volumes:
   redis_data:
 
