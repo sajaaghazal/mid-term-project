@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    volumes:
+      - redis_data:/data
+
+  app1:
+    build: ./app1
+    container_name: message_collector
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
+  
