@@ -1,29 +1,37 @@
-from flask import Flask, request
+from flask import Flask, request, render_template_string
 import redis
 
 app = Flask(__name__)
 
-# Connecting to the 'redis' service defined in docker-compose
+# Connects to the Redis service using the name 'redis' from docker-compose
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 @app.route('/', methods=['GET', 'POST'])
-def home():
-    # Increment visit count in Redis
+def collector():
+    # 1. Increment visit count every time the page is loaded
     r.incr('visit_count')
     
-    if request.method == 'POST': 
-        message = request.form['message']
-        # Push the message to a list in Redis
-        r.rpush('messages', message)
+    status_message = ""
+    
+    if request.method == 'POST':
+        user_text = request.form.get('message')
+        if user_text:
+            # 2. Store the message in a Redis list called 'user_messages'
+            r.lpush('user_messages', user_text)
+            status_message = "Message saved successfully!"
 
-    return '''
-        <h1>Message Collector</h1>
-        <form method="POST">
-            <input type="text" name="message" placeholder="Enter message" required>
-            <button type="submit">Send</button>
+    # Simple HTML Form for the user to type into
+    return render_template_string('''
+        <h1>DevOpsHub: Message Collector (App 1)</h1>
+        <p>Type a message to send to the Dashboard.</p>
+        <form method="post">
+            <input type="text" name="message" placeholder="Enter message here..." required>
+            <button type="submit">Submit</button>
         </form>
-    '''
+        <p style="color: green;">{{ status }}</p>
+        <br>
+        <a href="http://localhost:5001">Go to Dashboard (App 2)</a>
+    ''', status=status_message)
 
-if __name__ == '__main__':
-    # host='0.0.0.0' is required for the app to be reachable from outside the container
-    app.run(host='0.0.0.0', port=5000)
+if name == "__main__":
+    app.run(host="0.0.0.0", port=5000)
