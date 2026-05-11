@@ -14,7 +14,7 @@ services:
       - redis
 
   app2:
-    build: ./app2
+    build: ./app 2
     container_name: dashboard
     ports:
       - "5001:5001"
