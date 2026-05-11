@@ -13,7 +13,7 @@ services:
     depends_on:
       - redis
 
-    app2:
+  app2:
     build: ./app2
     container_name: dashboard
     ports:
@@ -23,7 +23,6 @@ services:
 
 volumes:
   redis_data:
-
 
 
 
